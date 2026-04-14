@@ -1,0 +1,17 @@
+# Repos de proyectos viven en sus propias ubicaciones (conectados vía junctions en projects/)
+# El parent repo alldatacore NO versiona código de proyectos
+projects/
+
+# Archivos de sistema
+.DS_Store
+*.swp
+Thumbs.db
+
+# No versionar config local de Obsidian
+vault/.obsidian/
+
+# Secretos
+.env
+.env.local
+*.pem
+*.key
