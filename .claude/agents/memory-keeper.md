@@ -60,6 +60,13 @@ Si la tarea afectó más de un proyecto:
 - Actualizar STATE.md de TODOS los proyectos afectados
 - Agregar referencia cruzada: "Afectado por cambio en {otro proyecto} — ver decisión YYYY-MM-DD"
 
+### 6. Campos específicos por proyecto
+
+**Studio** — el `STATE.md` incluye un campo `prompts_sincronizados`. Actualizarlo SIEMPRE que la tarea haya tocado el sistema de composición:
+- ✅ si el developer/auditor confirmaron que ambos prompts coinciden
+- ⚠️ si el cambio está incompleto (solo uno de los dos tocado) — en ese caso la tarea no debería haberse cerrado, pero el memory-keeper documenta el estado real
+- 📅 Incluir fecha de la última verificación
+
 ---
 
 ## Formato del update

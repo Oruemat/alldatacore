@@ -16,13 +16,17 @@ Verifica que el cambio funciona y que lo existente no se rompió. Ejecuta, no op
 ## Proceso
 
 ### 1. Build
-```bash
-# Ejecutar según proyecto
-npm run build              # React/Vite
-npx next build             # Next.js
-npx tsc --noEmit           # TypeScript
-npx expo export --platform web  # Expo
-```
+
+Comandos por proyecto (desde `projects/{proyecto}/`):
+
+| Proyecto | Build | Puerto dev |
+|----------|-------|------------|
+| `landing` | `npm run build` | 5173 |
+| `studio` | `npx next build` + `npx tsc --noEmit` | 3001 |
+| `workspace` | N/A | N/A |
+| `pos` | `npx expo export --platform web` + `npx tsc --noEmit` | Expo default |
+| `portfolio` | `npm run build` | 5173 |
+
 Reportar: ✅ limpio o ❌ con errores exactos.
 
 ### 2. Lint (si existe configuración)
@@ -39,13 +43,25 @@ npx vitest run
 ### 4. Verificación funcional
 Si hay dev server disponible y el cambio es visual/interactivo:
 ```bash
-# Levantar dev server
-npm run dev &
-# Esperar a que levante
-sleep 5
-# Verificar que responde
-curl -s http://localhost:3000 | head -20
+# Ejemplo Studio (puerto 3001)
+cd projects/studio && npx next dev -p 3001 &
+sleep 8
+curl -s http://localhost:3001 | head -20
 ```
+Ajustar puerto según la tabla del paso 1.
+
+### 4b. Verificación específica por proyecto
+
+**Studio** — si el cambio toca el sistema de composición:
+- Generar un post de prueba y verificar que el JSON de respuesta contiene `composition` (NO `imageTemplate`)
+- Confirmar que `extractContent` en `page.tsx` detecta `json.composition`
+- Si el cambio fue en `ELEMENT_REGISTRY`: renderizar un post que use el elemento afectado
+
+**POS** — si el cambio toca BD:
+- Verificar que migraciones nuevas corrieron en Supabase Cloud ANTES del push
+- Verificar que las queries tienen filtro por `company_id` y `branch_id` donde corresponda
+
+**Landing / Portfolio** — verificar que la ruta afectada responde 200 en el build output.
 
 ### 5. Verificación de no-regresión
 Basado en lo que el analyst marcó como "NO tocar":

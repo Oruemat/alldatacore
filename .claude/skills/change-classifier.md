@@ -87,9 +87,25 @@ Criterio detallado para que el orchestrator clasifique la complejidad de un camb
 
 ```
 ¿Toca BD/auth/seguridad? → CRÍTICO
+¿Toca prompts paralelos en Studio? → CRÍTICO (ver regla abajo)
 ¿4+ archivos o estado global? → COMPLEJO
 ¿2-3 archivos con lógica? → SIMPLE
 ¿1 archivo sin lógica? → MÍNIMO
 ```
 
 En caso de duda, clasificar un nivel más alto. Es más barato auditar de más que debugear un bug en producción.
+
+---
+
+## Reglas duras por proyecto
+
+### Studio — Prompts paralelos sincronizados
+Los archivos `src/lib/agent/handlers.ts` y `src/lib/agent/design-prompt.ts` contienen dos prompts que DEBEN producir el mismo schema de output (`composition` obligatorio, nunca `imageTemplate`).
+
+**Si un cambio toca uno de los dos → tocar el otro es obligatorio.**
+
+- Clasificación mínima: **COMPLEJO** (gatilla auditor + tester)
+- Si el cambio modifica el schema del JSON de output: **CRÍTICO** (incluye decisión en vault)
+- El auditor DEBE aplicar la skill `studio-sync-check.md` antes de aprobar
+
+**Razón**: si solo se actualiza uno, el agente vuelve a producir templates rígidos (`imageTemplate`), rompiendo la migración a `DCComposition`. Este bug ya ocurrió y es el motivo del invariante.

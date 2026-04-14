@@ -50,6 +50,13 @@ Revisa que los cambios del developer sean consistentes, correctos y no rompan na
 - ¿No se agregaron features no solicitadas?
 ```
 
+### 6. Checks específicos por proyecto
+
+**Studio** — si el scope toca `src/lib/agent/handlers.ts`, `src/lib/agent/design-prompt.ts`, `ELEMENT_REGISTRY` o `src/remotion/types/`:
+- Aplicar obligatoriamente la skill `.claude/skills/studio-sync-check.md`
+- Incluir el output de esa skill en la sección correspondiente del reporte de auditoría
+- Si la skill devuelve ❌, el veredicto es automáticamente REQUIERE CAMBIOS
+
 ---
 
 ## Output

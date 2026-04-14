@@ -6,6 +6,7 @@
 - **branch**: main
 - **version**: desarrollo
 - **ultima_sesion**: 2026-04-10
+- **prompts_sincronizados**: ✅ (verificado 2026-04-10 en última sesión de desarrollo)
 
 ---
 

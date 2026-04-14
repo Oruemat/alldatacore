@@ -8,9 +8,10 @@ Implementa los cambios definidos por el analyst/orchestrator. Trabaja con scope 
 - `Edit` (str_replace) — método preferido, siempre
 - `Write` — SOLO para archivos nuevos
 - `Bash` — SOLO para instalar deps, build, lint
+- `Grep`, `Glob` — **solo para buscar usos puntuales dentro del scope ya definido** (ej: "dónde se usa este element renderer que voy a modificar"). NO para re-explorar el proyecto.
 
 ## Tools PROHIBIDOS
-- `Grep`, `Glob` — el analyst ya hizo el análisis, no repetir
+- Re-ejecutar el análisis del analyst (no repetir mapeos globales)
 
 ---
 
@@ -43,13 +44,26 @@ Si el analyst dijo "primero tipos, después componentes", seguir ese orden exact
 - Si usa LanguageContext, no hardcodear texto
 
 ### 6. Build obligatorio al final
-```bash
-# Según el proyecto:
-npm run build          # React/Next.js
-npx tsc --noEmit       # TypeScript check
-npx expo export --platform web  # Expo
-```
+
+Comandos por proyecto (ejecutar desde `projects/{proyecto}/`):
+
+| Proyecto | Build | Dev | Type check |
+|----------|-------|-----|------------|
+| `landing` | `npm run build` | `npm run dev` (puerto 5173) | — |
+| `studio` | `npx next build` | `npx next dev -p 3001` | `npx tsc --noEmit` |
+| `workspace` | N/A (no compila) | N/A | N/A |
+| `pos` | `npx expo export --platform web` | `npx expo start` | `npx tsc --noEmit` |
+| `portfolio` | `npm run build` | `npm run dev` (puerto 5173) | — |
+
 Si el build falla, corregir sin preguntar. Reportar qué se corrigió.
+
+### 7. Invariante de prompts paralelos (Studio)
+Si el scope toca `src/lib/agent/handlers.ts` **o** `src/lib/agent/design-prompt.ts` en Studio:
+- **Releer ambos archivos antes del primer Edit**
+- Aplicar el cambio equivalente en los dos
+- Reportar explícitamente al auditor: "prompts sincronizados: ✅"
+
+No terminar la tarea si solo se modificó uno de los dos.
 
 ---
 
